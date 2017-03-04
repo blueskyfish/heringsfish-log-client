@@ -1,17 +1,18 @@
 import { Component, OnInit } from '@angular/core';
+import {DialogService} from "../dialog/dialog.service";
 
 @Component({
   selector: 'app-nav-bar',
   templateUrl: './nav-bar.component.html',
-  styleUrls: ['./nav-bar.component.css']
+  styleUrls: ['./nav-bar.component.less']
 })
-export class NavBarComponent implements OnInit {
+export class NavBarComponent  {
 
-  constructor() { }
+  constructor(private dialogService: DialogService) { }
 
-  ngOnInit() {
+  public onClickBrand() {
+    this.dialogService.show('about');
   }
-
   public onClickRefresh() {
     console.log('Refresh Clicked');
   }

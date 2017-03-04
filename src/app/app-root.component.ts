@@ -8,11 +8,23 @@
  * Copyright (c) 2017 BlueSkyFish
  */
 
-import { Component } from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {DialogService} from "./dialog/dialog.service";
+import {AboutComponent} from "./dialog/about.component";
 
 @Component({
   selector: 'app-root',
   templateUrl: './app-root.component.html'
 })
-export class AppRoot {
+export class AppRoot implements OnInit {
+
+  @ViewChild(AboutComponent)
+  public readonly aboutDialog: AboutComponent;
+
+  constructor(private dialogService: DialogService) {}
+
+  ngOnInit(): void {
+    this.dialogService.registerDialog('about', this.aboutDialog);
+    console.log('register aboutDialog (%s)', (this.aboutDialog != null ? 'true' : 'null'));
+  }
 }

@@ -1,13 +1,13 @@
 <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
-    <a class="navbar-brand" href="#">HF Log</a>
-    <ul class="nav navbar-nav">
-      <li>
-        <a (click)="onClickRefresh()" href="#">Reload</a>
-      </li>
-      <li>
-        <a href="#">Settings</a>
-      </li>
-    </ul>
+    <a class="navbar-brand" href="#" (click)="onClickBrand()">
+      <img src="assets/logo.svg"> hf log
+    </a>
+    <div class="nav navbar-nav navbar-left">
+      <button class="btn btn-default navbar-btn" (click)="onClickRefresh()">Refresh</button>
+    </div>
+    <div class="nav navbar-nav navbar-right">
+      <button class="btn btn-default navbar-btn">Settings</button>
+    </div>
   </div>
 </nav>

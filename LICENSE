@@ -1,28 +1,3 @@
-
-![Heringsfish Log Client](logo.png)
-
-# Heringsfish Log Client
-
-> The small browser client for the Payara (or Glassfish) application server.
->
-> **Note**: This is the browser part. See at <https://github.com/blueskyfish/heringsfish-log.git> for the complete application.
-
-## Table of Content
-
-* [History](#user-content-history)
-* [License](#user-content-license)
-
-
-## History
-
-| Version   | Date        | Description
-|----------:|:-----------:|----------------------------------------------------------------
-| 0.0.1     | 2017-03-04  | Initialize the project
-
-
-## License
-
-```text
 The MIT License (MIT)
 
 Copyright (c) 2017 BlueSkyFish
@@ -44,4 +19,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
-```

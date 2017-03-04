@@ -8,6 +8,14 @@
  * Copyright (c) 2017 BlueSkyFish
  */
 
-body {
-  padding-top: 70px;
+/**
+ * @interface IDialog
+ * @description
+ * The interface all to define dialog components
+ */
+export interface IDialog {
+
+  show();
+  hide();
+
 }
