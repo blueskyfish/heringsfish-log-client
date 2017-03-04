@@ -1,4 +1,12 @@
-// This file is required by karma.conf.js and loads recursively all the .spec and framework files
+/*!
+ * Heringsfish Log Client - https://github.com/blueskyfish/heringsfish-log-client.git
+ *
+ * The small browser client for the Payara (or Glassfish) application server.
+ *
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2017 BlueSkyFish
+ */
 
 import 'zone.js/dist/long-stack-trace-zone';
 import 'zone.js/dist/proxy.js';

@@ -8,7 +8,11 @@
  * Copyright (c) 2017 BlueSkyFish
  */
 
-export const environment = {
-  production: false,
-  socketUrl: "http://localhost:5000"
-};
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app-root.component.html'
+})
+export class AppRoot {
+}

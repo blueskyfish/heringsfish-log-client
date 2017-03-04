@@ -1,0 +1,14 @@
+<main class="container">
+  <table class="table table-bordered table-striped table-hover">
+    <thead>
+    <tr>
+      <th *ngFor="let name of logNames">{{ getColumnTitle(name)}} </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let message of logMessages; let i = index">
+      <td *ngFor="let name of logNames">{{ getColumnValue(i, message, name)}}</td>
+    </tr>
+    </tbody>
+  </table>
+</main>
