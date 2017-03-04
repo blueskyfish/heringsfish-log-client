@@ -1,7 +1,7 @@
 {
   "name": "heringsfish-log-client",
   "version": "0.0.1",
-  "description": "The small browser client for the Payara (or Glassfish) application server.",
+  "description": "The small browser client for viewing log message from the Payara (or Glassfish) application server.",
   "author": "BlueSkyFish <blueskyfish@kirchnerei.de>",
   "license": "MIT",
   "repository": {

@@ -3,9 +3,11 @@
 
 # Heringsfish Log Client
 
-> The small browser client for the Payara (or Glassfish) application server.
+> TThe small browser client for viewing log message from the Payara (or Glassfish) application server.
 >
-> **Note**: This is the browser part. See at <https://github.com/blueskyfish/heringsfish-log.git> for the complete application.
+> **Note**: This is the browser part (or browser client). See at <https://github.com/blueskyfish/heringsfish-log.git> for the complete application.
+
+**Still under construction**
 
 ## Table of Content
 
