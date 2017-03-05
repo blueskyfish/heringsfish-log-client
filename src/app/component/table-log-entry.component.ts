@@ -16,8 +16,11 @@ export class TableLogEntryComponent implements OnInit {
   constructor(private settingService: SettingService) { }
 
   ngOnInit() {
-    this.logNames = this.settingService.getColumnNames();
-    console.log('Log Names: %s', JSON.stringify(this.logNames));
+    this.settingService.getColumnSubject().subscribe((names: string[]) => {
+      this.logNames = names;
+      console.log('Log Names: %s', JSON.stringify(this.logNames));
+    });
+    this.settingService.submitColumn();
 
     this.logMessages.push(new LogEntry('2017-03-01T13:00:41.102+0100', 1488369641102, 'INFO', 800, 'javax.enterprise.logging', '18', 'RunLevelControllerThread-1488369640990', 'NCLS-LOGGING-00009', 'Running Payara Version: Payara Server  4.1.1.164 #badassfish (build 28)'));
     this.logMessages.push(new LogEntry('2017-03-01T13:00:41.102+0100', 1488369641102, 'INFO', 800, 'javax.enterprise.logging', '18', 'RunLevelControllerThread-1488369640990', 'NCLS-LOGGING-00009', 'Running Payara Version: Payara Server  4.1.1.164 #badassfish (build 28)'));
@@ -25,7 +28,7 @@ export class TableLogEntryComponent implements OnInit {
   }
 
   getColumnTitle(name: string): string {
-    return this.settingService.getLogColumnTitle(name);
+    return this.settingService.getColumnTitle(name);
   }
 
   getColumnValue(index: number, message: ILogEntry, name: string): any {

@@ -1,65 +1,88 @@
+/*!
+ * Heringsfish Log Client - https://github.com/blueskyfish/heringsfish-log-client.git
+ *
+ * The small browser client for the Payara (or Glassfish) application server.
+ *
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2017 BlueSkyFish
+ */
+
 import { Injectable } from '@angular/core';
+import { Subject } from "rxjs/Subject";
+
 
 @Injectable()
 export class SettingService {
 
   private _mLogSettings: { [index: string] : LogSettingItem } = {};
 
+  private _subject: Subject<string[]> = new Subject();
+
   constructor() {
-    this.addLogColumn('no', true, '#');
-    this.addLogColumn('timestamp', true, 'Timestamp');
-    this.addLogColumn('timeMillis', false, 'Time in Milliseconds');
-    this.addLogColumn('logLevel', true, 'Log Level');
-    this.addLogColumn('logValue', false, 'Log Value');
-    this.addLogColumn('logName', true, 'Log Name');
-    this.addLogColumn('threadId', true, 'Thread ID');
-    this.addLogColumn('threadName', false, 'Thread Name');
-    this.addLogColumn('messageId', false, 'Message ID');
-    this.addLogColumn('logMessage', true, 'Message');
+    this.addColumn('no', true, '#');
+    this.addColumn('timestamp', true, 'Timestamp');
+    this.addColumn('timeMillis', false, 'Time in Milliseconds');
+    this.addColumn('logLevel', true, 'Log Level');
+    this.addColumn('logValue', false, 'Log Value');
+    this.addColumn('logName', true, 'Log Name');
+    this.addColumn('threadId', true, 'Thread ID');
+    this.addColumn('threadName', false, 'Thread Name');
+    this.addColumn('messageId', false, 'Message ID');
+    this.addColumn('logMessage', true, 'Message');
   }
 
-  public isLogColumnShow(name: string): boolean {
-    const s: LogSettingItem = this.getLogColumn(name);
+  public isColumnShow(name: string): boolean {
+    const s: LogSettingItem = this.getColumn(name);
     return s != null ? s.show : false;
   }
 
-  public setLogColumnShow(name: string, show: boolean) {
-    const s: LogSettingItem = this.getLogColumn(name);
+  public setColumnShow(name: string, show: boolean) {
+    const s: LogSettingItem = this.getColumn(name);
     if (s) {
       s.show = show;
     }
   }
 
-  public getLogColumnTitle(name: string): string {
-    const s: LogSettingItem = this.getLogColumn(name);
+  public getColumnTitle(name: string): string {
+    const s: LogSettingItem = this.getColumn(name);
     return s != null ? s.title : null;
   }
 
-  public getLogColumn(name: string): LogSettingItem {
+  public getColumn(name: string): LogSettingItem {
     if (this._mLogSettings.hasOwnProperty(name)) {
       return this._mLogSettings[name];
     }
     return null;
   }
 
-  public addLogColumn(name: string, show: boolean, title: string) {
+  public addColumn(name: string, show: boolean, title: string) {
     this._mLogSettings[name] = new LogSettingItem(name, show, title);
   }
 
-  public getColumnNames(): Array<string> {
+  public getAllColumnNames(): Array<string> {
     const names: Array<string> = [];
     for (let name in this._mLogSettings) {
-      if (this.isLogColumnShow(name)) {
+      if (this._mLogSettings.hasOwnProperty(name)) {
         names.push(name);
       }
     }
     return names;
   }
 
-  public getAllColumns(): Array<string> {
+  public submitColumn() {
+    const names = this._getAllVisibleColumnNames();
+    this._subject.next(names);
+  }
+
+  public getColumnSubject() : Subject<string[]> {
+    return this._subject;
+  }
+
+  private _getAllVisibleColumnNames(): Array<string> {
     const names: Array<string> = [];
     for (let name in this._mLogSettings) {
-      if (this._mLogSettings.hasOwnProperty(name)) {
+      if (this.isColumnShow(name)) {
         names.push(name);
       }
     }
@@ -70,6 +93,5 @@ export class SettingService {
 export class LogSettingItem {
 
   constructor(public name: string, public show: boolean, public title: string) {}
-
 
 }

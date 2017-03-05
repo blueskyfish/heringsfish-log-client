@@ -38,12 +38,12 @@ export class SettingDialogComponent implements OnInit, AfterViewInit, IDialog {
     console.log('Setting OnShow()');
 
 
-    const colNames: Array<string> = this.settingService.getAllColumns();
+    const colNames: Array<string> = this.settingService.getAllColumnNames();
 
     this.logColumns = [];
 
     colNames.forEach((name)=> {
-      const item: LogSettingItem = this.settingService.getLogColumn(name);
+      const item: LogSettingItem = this.settingService.getColumn(name);
       this.logColumns.push(new LogSettingItem(item.name, item.show, item.title));
       console.log('Log Column: %s -> %s', item.name, item.show);
     });
@@ -65,9 +65,12 @@ export class SettingDialogComponent implements OnInit, AfterViewInit, IDialog {
 
     for (let item of this.logColumns) {
       console.log('Saved: Log Column: %s -> %s', item.name, item.show);
+      this.settingService.setColumnShow(item.name, item.show);
     }
-
-    this.hide();
+    this.settingService.submitColumn();
+    setTimeout(() => {
+      this.hide();
+    }, 10);
   }
 
   public onToggleColumn(item: LogSettingItem): void {
