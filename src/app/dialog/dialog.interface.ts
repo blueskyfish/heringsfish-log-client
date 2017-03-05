@@ -15,7 +15,7 @@
  */
 export interface IDialog {
 
-  show();
-  hide();
+  show(): void;
+  hide(): void;
 
 }

@@ -19,18 +19,21 @@ import { AppRoot } from './app-root.component';
 
 import { SocketService } from './service/socket.service';
 import { SettingService } from "./service/setting.service";
-import { DialogService } from "./dialog/dialog.service";
 
 import { NavBarComponent } from './component/nav-bar.component';
 import { TableLogEntryComponent } from './component/table-log-entry.component';
-import { AboutComponent } from './dialog/about.component';
+import { AboutDialogComponent } from './dialog/about-dialog.component';
+import { SettingDialogComponent } from './dialog/setting-dialog.component';
+import { ToggleComponent } from './component/toggle.component';
 
 @NgModule({
   declarations: [
     AppRoot,
     NavBarComponent,
     TableLogEntryComponent,
-    AboutComponent
+    AboutDialogComponent,
+    SettingDialogComponent,
+    ToggleComponent
   ],
   imports: [
     BrowserModule,
@@ -41,7 +44,6 @@ import { AboutComponent } from './dialog/about.component';
   providers: [
     SocketService,
     SettingService,
-    DialogService,
     { provide: 'Window', useValue: window }
   ],
   bootstrap: [AppRoot]

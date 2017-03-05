@@ -9,13 +9,13 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { IDialog } from "./idialog.component";
+import { IDialog } from "./dialog.interface";
 
 @Component({
-  selector: 'app-about',
-  templateUrl: './about.component.html'
+  selector: 'app-about-dialog',
+  templateUrl: 'about-dialog.component.html'
 })
-export class AboutComponent implements OnInit, IDialog {
+export class AboutDialogComponent implements OnInit, IDialog {
 
   constructor() { }
 

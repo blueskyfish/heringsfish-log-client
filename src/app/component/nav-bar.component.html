@@ -7,7 +7,9 @@
       <button class="btn btn-default navbar-btn" (click)="onClickRefresh()">Refresh</button>
     </div>
     <div class="nav navbar-nav navbar-right">
-      <button class="btn btn-default navbar-btn">Settings</button>
+      <button class="btn btn-default navbar-btn" (click)="onClickSetting()">Settings</button>
     </div>
   </div>
 </nav>
+<app-about-dialog></app-about-dialog>
+<app-setting-dialog></app-setting-dialog>

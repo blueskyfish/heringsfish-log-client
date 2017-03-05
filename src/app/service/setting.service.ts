@@ -56,6 +56,15 @@ export class SettingService {
     return names;
   }
 
+  public getAllColumns(): Array<string> {
+    const names: Array<string> = [];
+    for (let name in this._mLogSettings) {
+      if (this._mLogSettings.hasOwnProperty(name)) {
+        names.push(name);
+      }
+    }
+    return names;
+  }
 }
 
 export class LogSettingItem {
