@@ -11,6 +11,8 @@
 import {Component, OnInit, ViewChild, AfterViewInit} from '@angular/core';
 import {AboutDialogComponent} from "../dialog/about-dialog.component";
 import {SettingDialogComponent} from "../dialog/setting-dialog.component";
+import {SocketService} from "../service/socket.service";
+import {LogEntryService} from "../service/log-entry.service";
 
 @Component({
   selector: 'app-nav-bar',
@@ -25,8 +27,11 @@ export class NavBarComponent implements OnInit, AfterViewInit {
   @ViewChild(SettingDialogComponent)
   public readonly settingDialog: SettingDialogComponent;
 
-  constructor() { }
+  constructor(private socketService: SocketService, private logEntryService: LogEntryService) { }
 
+  public running(): boolean {
+    return this.socketService.socketOpen();
+  }
 
   ngOnInit(): void {
   }
@@ -39,11 +44,20 @@ export class NavBarComponent implements OnInit, AfterViewInit {
   }
 
   public onClickRefresh() {
-    console.log('Refresh Clicked');
+    this.logEntryService.submitClearing();
+  }
+
+  public onClickStart() {
+    this.socketService.start();
+  }
+
+  public onClickPause() {
+    this.socketService.pause();
   }
 
   public onClickSetting() {
     this.settingDialog.show();
   }
+
 
 }

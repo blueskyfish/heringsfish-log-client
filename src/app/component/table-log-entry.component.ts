@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {SettingService} from "../service/setting.service";
 import {ILogEntry, LogEntry} from "../shared/log-entry";
+import {SocketService} from "../service/socket.service";
+import {LogEntryService} from "../service/log-entry.service";
 
 @Component({
   selector: 'app-table-log-entry',
@@ -11,9 +13,10 @@ export class TableLogEntryComponent implements OnInit {
 
   private logNames: Array<string> = [];
 
+  private maxCount: number = 0;
   private logMessages: Array<ILogEntry> = [];
 
-  constructor(private settingService: SettingService) { }
+  constructor(private settingService: SettingService, private socketService: SocketService, private logEntryService: LogEntryService) { }
 
   ngOnInit() {
     this.settingService.getColumnSubject().subscribe((names: string[]) => {
@@ -21,10 +24,25 @@ export class TableLogEntryComponent implements OnInit {
       console.log('Log Names: %s', JSON.stringify(this.logNames));
     });
     this.settingService.submitColumn();
+    this.settingService.getMaxCountSubject().subscribe((maxCount) => {
+      this.maxCount = maxCount;
+      console.log('MaxCount %s', this.maxCount);
+    });
+    this.settingService.submitMaxCount();
 
-    this.logMessages.push(new LogEntry('2017-03-01T13:00:41.102+0100', 1488369641102, 'INFO', 800, 'javax.enterprise.logging', '18', 'RunLevelControllerThread-1488369640990', 'NCLS-LOGGING-00009', 'Running Payara Version: Payara Server  4.1.1.164 #badassfish (build 28)'));
-    this.logMessages.push(new LogEntry('2017-03-01T13:00:41.102+0100', 1488369641102, 'INFO', 800, 'javax.enterprise.logging', '18', 'RunLevelControllerThread-1488369640990', 'NCLS-LOGGING-00009', 'Running Payara Version: Payara Server  4.1.1.164 #badassfish (build 28)'));
-    this.logMessages.push(new LogEntry('2017-03-01T13:00:41.102+0100', 1488369641102, 'WARNING', 900, 'javax.enterprise.logging', '18', 'RunLevelControllerThread-1488369640990', 'NCLS-LOGGING-00009', 'Running Payara Version: Payara Server  4.1.1.164 #badassfish (build 28)'));
+    this.socketService.getLogMessages().subscribe((logEntry: ILogEntry) => {
+      this.logMessages.unshift(logEntry);
+      if (this.logMessages.length > this.maxCount) {
+        while (this.logMessages.length > this.maxCount) {
+          this.logMessages.pop();
+        }
+      }
+    });
+
+    this.logEntryService.getClearingSubject().subscribe((t) => {
+      this.logMessages = [];
+      console.log('Clear Log Messages');
+    });
   }
 
   getColumnTitle(name: string): string {
@@ -33,7 +51,7 @@ export class TableLogEntryComponent implements OnInit {
 
   getColumnValue(index: number, message: ILogEntry, name: string): any {
     if (name == 'no') {
-      return index + 1;
+      return this.logMessages.length - index;
     }
     return message.get(name);
   }

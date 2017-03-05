@@ -8,6 +8,10 @@
  * Copyright (c) 2017 BlueSkyFish
  */
 
+@appToggleHeight:    24px;
+@appToggleWidth:     40px;
+@appToggleRadius:    @appToggleHeight/2;
+
 @import (reference) "../_styles/variables";
 
 .toggle {
@@ -15,19 +19,19 @@
   position: relative;
   box-shadow: inset 0 0 0 1px #d5d5d5;
   text-indent: -5000px;
-  height: 30px;
-  width: 50px;
-  border-radius: 15px;
+  height:        @appToggleHeight;
+  width:         @appToggleWidth;
+  border-radius: @appToggleRadius;
 
   &:before {
     content: "";
     position: absolute;
     display: block;
-    height: 30px;
-    width: 30px;
+    height: @appToggleHeight;
+    width:  @appToggleHeight;
     top: 0;
     left: 0;
-    border-radius: 15px;
+    border-radius: @appToggleRadius;
     background: rgba(19, 191, 17, 0);
        -moz-transition: .25s ease-in-out;
     -webkit-transition: .25s ease-in-out;
@@ -38,11 +42,11 @@
     content: "";
     position: absolute;
     display: block;
-    height: 30px;
-    width: 30px;
+    height: @appToggleHeight;
+    width:  @appToggleHeight;
     top: 0;
     left: 0;
-    border-radius: 15px;
+    border-radius: @appToggleRadius;
     background: white;
     box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.2), 0 2px 4px rgba(0, 0, 0, 0.2);
        -moz-transition: .25s ease-in-out;
@@ -52,11 +56,11 @@
 
   &.checked {
     &:before {
-      width: 50px;
+      width: @appToggleWidth;
       background: @appPrimaryColor;
     }
     &:after {
-      left: 20px;
+      left: @appToggleWidth - @appToggleHeight;
       box-shadow: inset 0 0 0 1px @appPrimaryColor, 0 2px 4px rgba(0, 0, 0, .2);
     }
   }

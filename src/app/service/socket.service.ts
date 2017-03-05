@@ -22,28 +22,46 @@ import { IServerConfig, ServerConfig } from "../shared/server-config";
 @Injectable()
 export class SocketService {
 
-  private socketUrl = null;
-  private socket = null;
-  private socketCount: number;
+  private _socketUrl = null;
+  private _socket = null;
+  private _socketCount: number;
+  private _socketOpen: boolean = false;
 
   constructor(@Inject('Window') window: any) {
-    this.socketUrl = SocketService.buildSocketUrl(window);
-    this.socket = io(this.socketUrl);
-    this.socketCount = 0;
-
-    console.info('SocketURL %s', this.socketUrl);
+    this._socketUrl = SocketService.buildSocketUrl(window);
+    this._socketCount = 0;
+    console.info('SocketURL %s', this._socketUrl);
   }
+
+  public socketOpen() : boolean {
+    return this._socketOpen;
+  }
+
+  public start() {
+    this.checkSocket();
+    this._socket.open();
+    this._socket.connect();
+    this._socketOpen = true;
+  }
+
+  public pause() {
+    this.checkSocket();
+    this._socket.disconnect();
+    this._socketOpen = false;
+  }
+
 
   public getLogMessages(): Observable<ILogEntry> {
     this.checkSocket();
     return new Observable((observer) => {
-      this.socketCount++;
-      this.socket.on('log-message', (data) => {
+      this._socketCount++;
+      this._socket.on('message', (data) => {
 
         console.log('Receive LogEntry: %s', JSON.stringify(data));
 
         const logEntry: ILogEntry = new LogEntry(data.timestamp, data.timeMillis,
-          data.logLevel, data.logValue, data.logName, data.threadId, data.threadName, data.messageId, data.logMessage);
+          data.logLevel, data.logValue, data.logName, data.threadId, data.threadName,
+          data.messageId, data.logMessage);
 
         observer.next(logEntry);
       });
@@ -57,8 +75,8 @@ export class SocketService {
   public getServerConfig(): Observable<IServerConfig> {
     this.checkSocket();
     return new Observable((observer) => {
-      this.socketCount++;
-      this.socket.on('server-config', (data) => {
+      this._socketCount++;
+      this._socket.on('server-config', (data) => {
 
         console.log('Receive ServerConfig: %s', JSON.stringify(data));
 
@@ -72,19 +90,21 @@ export class SocketService {
   }
 
   private checkSocket(): void {
-    if (!this.socket) {
+    if (!this._socket) {
       // reconnect !!
-      this.socket = io(this.socketUrl);
-      this.socketCount = 0;
+      this._socket = io(this._socketUrl, {
+        autoConnect: false
+      });
+      this._socketCount = 0;
     }
   }
 
   private releaseSocket(): void {
-    if (this.socketCount > 0) {
-      this.socketCount--;
-      if (this.socketCount === 0) {
-        this.socket.disconnect();
-        this.socket = null;
+    if (this._socketCount > 0) {
+      this._socketCount--;
+      if (this._socketCount === 0) {
+        this._socket.disconnect();
+        this._socket = null;
       }
     }
   }
@@ -96,7 +116,8 @@ export class SocketService {
     }
 
     const l: Location = window.location || {};
+    const port: number = window.socketPort || 5000;
 
-    return (l.protocol || 'http') + "//" + (l.hostname || 'localhost') + ":" + (l.port || '5000');
+    return (l.protocol || 'http') + "//" + (l.hostname || 'localhost') + ":" + port;
   }
 }

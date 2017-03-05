@@ -19,6 +19,9 @@ export class SettingService {
 
   private _subject: Subject<string[]> = new Subject();
 
+  private _maxCount: number = 1000;
+  private _subjectMaxCount: Subject<number> = new Subject();
+
   constructor() {
     this.addColumn('no', true, '#');
     this.addColumn('timestamp', true, 'Timestamp');
@@ -70,6 +73,17 @@ export class SettingService {
     return names;
   }
 
+  public updateMaxCount(maxCount: number) {
+    if (this._maxCount != maxCount) {
+      this._maxCount = maxCount;
+      this.submitMaxCount();
+    }
+  }
+
+  public submitMaxCount() {
+    this._subjectMaxCount.next(this._maxCount);
+  }
+
   public submitColumn() {
     const names = this._getAllVisibleColumnNames();
     this._subject.next(names);
@@ -77,6 +91,10 @@ export class SettingService {
 
   public getColumnSubject() : Subject<string[]> {
     return this._subject;
+  }
+
+  public getMaxCountSubject(): Subject<number> {
+    return this._subjectMaxCount;
   }
 
   private _getAllVisibleColumnNames(): Array<string> {
