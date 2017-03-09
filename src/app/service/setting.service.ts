@@ -8,19 +8,17 @@
  * Copyright (c) 2017 BlueSkyFish
  */
 
-import { Injectable } from '@angular/core';
-import { Subject } from "rxjs/Subject";
-
+import {Injectable, EventEmitter} from '@angular/core';
 
 @Injectable()
 export class SettingService {
 
   private _mLogSettings: { [index: string] : LogSettingItem } = {};
 
-  private _subject: Subject<string[]> = new Subject();
+  private _changeVisibleColumns: EventEmitter<string[]> = new EventEmitter(true);
 
-  private _maxCount: number = 1000;
-  private _subjectMaxCount: Subject<number> = new Subject();
+  private _maxRows: number = 1000;
+  private _changeMaxRows: EventEmitter<number> = new EventEmitter(true);
 
   constructor() {
     this.addColumn('no', true, '#');
@@ -35,35 +33,35 @@ export class SettingService {
     this.addColumn('logMessage', true, 'Message');
   }
 
-  public isColumnShow(name: string): boolean {
+  isColumnShow(name: string): boolean {
     const s: LogSettingItem = this.getColumn(name);
     return s != null ? s.show : false;
   }
 
-  public setColumnShow(name: string, show: boolean) {
+  setColumnShow(name: string, show: boolean) {
     const s: LogSettingItem = this.getColumn(name);
     if (s) {
       s.show = show;
     }
   }
 
-  public getColumnTitle(name: string): string {
+  getColumnTitle(name: string): string {
     const s: LogSettingItem = this.getColumn(name);
     return s != null ? s.title : null;
   }
 
-  public getColumn(name: string): LogSettingItem {
+  getColumn(name: string): LogSettingItem {
     if (this._mLogSettings.hasOwnProperty(name)) {
       return this._mLogSettings[name];
     }
     return null;
   }
 
-  public addColumn(name: string, show: boolean, title: string) {
+  addColumn(name: string, show: boolean, title: string) {
     this._mLogSettings[name] = new LogSettingItem(name, show, title);
   }
 
-  public getAllColumnNames(): Array<string> {
+  getAllColumnNames(): Array<string> {
     const names: Array<string> = [];
     for (let name in this._mLogSettings) {
       if (this._mLogSettings.hasOwnProperty(name)) {
@@ -73,28 +71,20 @@ export class SettingService {
     return names;
   }
 
-  public updateMaxCount(maxCount: number) {
-    if (this._maxCount != maxCount) {
-      this._maxCount = maxCount;
+  updateMaxCount(maxCount: number) {
+    if (this._maxRows != maxCount) {
+      this._maxRows = maxCount;
       this.submitMaxCount();
     }
   }
 
-  public submitMaxCount() {
-    this._subjectMaxCount.next(this._maxCount);
+  submitMaxCount() {
+    this._changeMaxRows.next(this._maxRows);
   }
 
-  public submitColumn() {
-    const names = this._getAllVisibleColumnNames();
-    this._subject.next(names);
-  }
-
-  public getColumnSubject() : Subject<string[]> {
-    return this._subject;
-  }
-
-  public getMaxCountSubject(): Subject<number> {
-    return this._subjectMaxCount;
+  updateVisibleColumns() {
+    const names: string[] = this._getAllVisibleColumnNames();
+    this._changeVisibleColumns.emit(names);
   }
 
   private _getAllVisibleColumnNames(): Array<string> {
@@ -105,6 +95,21 @@ export class SettingService {
       }
     }
     return names;
+  }
+
+  addMaxRowsListener(callback: ICallback<number>): void {
+    this._changeMaxRows.subscribe((maxRows: number) => {
+      callback(maxRows);
+    });
+    callback(this._maxRows);
+  }
+
+  addVisibleColumnListener(callback: ICallback<string[]>): void {
+    this._changeVisibleColumns.subscribe((columnNames: string[]) => {
+      callback(columnNames);
+    });
+    const tempNames: string[] = this._getAllVisibleColumnNames();
+    callback(tempNames);
   }
 }
 

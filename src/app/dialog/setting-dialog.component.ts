@@ -67,7 +67,7 @@ export class SettingDialogComponent implements OnInit, AfterViewInit, IDialog {
       console.log('Saved: Log Column: %s -> %s', item.name, item.show);
       this.settingService.setColumnShow(item.name, item.show);
     }
-    this.settingService.submitColumn();
+    this.settingService.updateVisibleColumns();
     setTimeout(() => {
       this.hide();
     }, 10);

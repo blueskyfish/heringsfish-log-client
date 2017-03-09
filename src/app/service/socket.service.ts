@@ -8,16 +8,13 @@
  * Copyright (c) 2017 BlueSkyFish
  */
 
-import {Injectable, Inject} from '@angular/core';
+import {Injectable, Inject, EventEmitter} from '@angular/core';
 
 import { environment } from '../../environments/environment';
 
 import * as io from 'socket.io-client';
 
-import { Observable } from "rxjs/Observable";
-
 import { LogEntry, ILogEntry } from "../shared/log-entry";
-import { IServerConfig, ServerConfig } from "../shared/server-config";
 
 @Injectable()
 export class SocketService {
@@ -26,6 +23,8 @@ export class SocketService {
   private _socket = null;
   private _socketCount: number;
   private _socketOpen: boolean = false;
+
+  private _receiveMessage: EventEmitter<any> = new EventEmitter(true);
 
   constructor(@Inject('Window') window: any) {
     this._socketUrl = SocketService.buildSocketUrl(window);
@@ -50,11 +49,23 @@ export class SocketService {
     this._socketOpen = false;
   }
 
-
-  public getLogMessages(): Observable<ILogEntry> {
+  addMessageListener(callback: ICallback<ILogEntry>): void {
     this.checkSocket();
-    return new Observable((observer) => {
-      this._socketCount++;
+    this._receiveMessage.subscribe((logEntry: ILogEntry) => {
+      callback(logEntry);
+    });
+  }
+
+  private checkSocket(): void {
+    if (!this._socket) {
+
+      // reconnect !!
+      this._socket = io(this._socketUrl, {
+        autoConnect: false
+      });
+      this._socketCount = 0;
+
+      // socket event "message"....
       this._socket.on('message', (data) => {
 
         console.log('Receive LogEntry: %s', JSON.stringify(data));
@@ -63,39 +74,8 @@ export class SocketService {
           data.logLevel, data.logValue, data.logName, data.threadId, data.threadName,
           data.messageId, data.logMessage);
 
-        observer.next(logEntry);
+        this._receiveMessage.emit(logEntry);
       });
-
-      return () => {
-        this.releaseSocket();
-      }
-    });
-  }
-
-  public getServerConfig(): Observable<IServerConfig> {
-    this.checkSocket();
-    return new Observable((observer) => {
-      this._socketCount++;
-      this._socket.on('server-config', (data) => {
-
-        console.log('Receive ServerConfig: %s', JSON.stringify(data));
-
-        const serverConfig: IServerConfig = new ServerConfig(data.serverLog, data.domainName);
-        observer.next(serverConfig);
-      });
-      return () => {
-        this.releaseSocket();
-      }
-    });
-  }
-
-  private checkSocket(): void {
-    if (!this._socket) {
-      // reconnect !!
-      this._socket = io(this._socketUrl, {
-        autoConnect: false
-      });
-      this._socketCount = 0;
     }
   }
 

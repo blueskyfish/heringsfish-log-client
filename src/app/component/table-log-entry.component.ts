@@ -13,33 +13,35 @@ export class TableLogEntryComponent implements OnInit {
 
   private logNames: Array<string> = [];
 
-  private maxCount: number = 0;
+  private maxRows: number = 0;
   private logMessages: Array<ILogEntry> = [];
 
   constructor(private settingService: SettingService, private socketService: SocketService, private logEntryService: LogEntryService) { }
 
   ngOnInit() {
-    this.settingService.getColumnSubject().subscribe((names: string[]) => {
+
+    this.settingService.addVisibleColumnListener((names: string[]) => {
       this.logNames = names;
       console.log('Log Names: %s', JSON.stringify(this.logNames));
     });
-    this.settingService.submitColumn();
-    this.settingService.getMaxCountSubject().subscribe((maxCount) => {
-      this.maxCount = maxCount;
-      console.log('MaxCount %s', this.maxCount);
-    });
-    this.settingService.submitMaxCount();
 
-    this.socketService.getLogMessages().subscribe((logEntry: ILogEntry) => {
+    this.settingService.addMaxRowsListener((maxRows) => {
+      this.maxRows = maxRows;
+      console.log('MaxCount %s', this.maxRows);
+    });
+
+    this.socketService.addMessageListener((logEntry: ILogEntry) => {
+
       this.logMessages.unshift(logEntry);
-      if (this.logMessages.length > this.maxCount) {
-        while (this.logMessages.length > this.maxCount) {
+
+      if (this.logMessages.length > this.maxRows) {
+        while (this.logMessages.length > this.maxRows) {
           this.logMessages.pop();
         }
       }
     });
 
-    this.logEntryService.getClearingSubject().subscribe((t) => {
+    this.logEntryService.addClearingListener((t) => {
       this.logMessages = [];
       console.log('Clear Log Messages');
     });
