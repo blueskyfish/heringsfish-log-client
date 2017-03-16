@@ -20,6 +20,9 @@ export class SettingService {
   private _maxRows: number = 1000;
   private _changeMaxRows: EventEmitter<number> = new EventEmitter(true);
 
+  private _clearTable: EventEmitter<any> = new EventEmitter(true);
+
+
   constructor() {
     this.addColumn('no', true, '#');
     this.addColumn('timestamp', true, 'Timestamp');
@@ -111,10 +114,24 @@ export class SettingService {
     const tempNames: string[] = this._getAllVisibleColumnNames();
     callback(tempNames);
   }
+
+  addClearTableListener(callback: ICallback<any>): void {
+    this._clearTable.subscribe((value: any) => {
+      callback(value);
+    });
+  }
+
+  public submitClearTable() {
+    this._clearTable.emit(1);
+  }
+
 }
 
 export class LogSettingItem {
 
   constructor(public name: string, public show: boolean, public title: string) {}
 
+  static isNoColumn(name) {
+    return name === 'no';
+  }
 }

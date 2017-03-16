@@ -12,7 +12,7 @@ import {Component, OnInit, ViewChild, AfterViewInit} from '@angular/core';
 import {AboutDialogComponent} from "../dialog/about-dialog.component";
 import {SettingDialogComponent} from "../dialog/setting-dialog.component";
 import {SocketService} from "../service/socket.service";
-import {LogEntryService} from "../service/log-entry.service";
+import {SettingService} from "../service/setting.service";
 
 @Component({
   selector: 'app-nav-bar',
@@ -27,10 +27,10 @@ export class NavBarComponent implements OnInit, AfterViewInit {
   @ViewChild(SettingDialogComponent)
   public readonly settingDialog: SettingDialogComponent;
 
-  constructor(private socketService: SocketService, private logEntryService: LogEntryService) { }
+  constructor(private socketService: SocketService, private settingService: SettingService) { }
 
   public running(): boolean {
-    return this.socketService.socketOpen();
+    return this.socketService.isSocketOpen();
   }
 
   ngOnInit(): void {
@@ -44,7 +44,7 @@ export class NavBarComponent implements OnInit, AfterViewInit {
   }
 
   public onClickRefresh() {
-    this.logEntryService.submitClearing();
+    this.settingService.submitClearTable();
   }
 
   public onClickStart() {

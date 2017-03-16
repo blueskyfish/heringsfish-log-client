@@ -32,7 +32,7 @@ export class SocketService {
     console.info('SocketURL %s', this._socketUrl);
   }
 
-  public socketOpen() : boolean {
+  public isSocketOpen() : boolean {
     return this._socketOpen;
   }
 
@@ -68,7 +68,7 @@ export class SocketService {
       // socket event "message"....
       this._socket.on('message', (data) => {
 
-        console.log('Receive LogEntry: %s', JSON.stringify(data));
+        // console.log('Receive LogEntry: %s', JSON.stringify(data));
 
         const logEntry: ILogEntry = new LogEntry(data.timestamp, data.timeMillis,
           data.logLevel, data.logValue, data.logName, data.threadId, data.threadName,

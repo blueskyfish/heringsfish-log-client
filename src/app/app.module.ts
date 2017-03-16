@@ -19,22 +19,23 @@ import { AppRoot } from './app-root.component';
 
 import { SocketService } from './service/socket.service';
 import { SettingService } from "./service/setting.service";
-import { LogEntryService } from "./service/log-entry.service";
 
 import { NavBarComponent } from './component/nav-bar.component';
-import { TableLogEntryComponent } from './component/table-log-entry.component';
+import { MessageTableComponent } from './component/message-table.component';
 import { AboutDialogComponent } from './dialog/about-dialog.component';
 import { SettingDialogComponent } from './dialog/setting-dialog.component';
 import { ToggleComponent } from './component/toggle.component';
+import { ColumnStylePipe } from './pipe/column-style.pipe';
 
 @NgModule({
   declarations: [
     AppRoot,
     NavBarComponent,
-    TableLogEntryComponent,
+    MessageTableComponent,
     AboutDialogComponent,
     SettingDialogComponent,
-    ToggleComponent
+    ToggleComponent,
+    ColumnStylePipe
   ],
   imports: [
     BrowserModule,
@@ -45,7 +46,6 @@ import { ToggleComponent } from './component/toggle.component';
   providers: [
     SocketService,
     SettingService,
-    LogEntryService,
     { provide: 'Window', useValue: window }
   ],
   bootstrap: [AppRoot]
